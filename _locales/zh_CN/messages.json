@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "把 YouTube 变成效率工具：极简界面，而不是算法推荐",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "启用扩展"
+  },
+  "popupNote": {
+    "message": "切换后会重新加载已打开的 YouTube 标签页。"
+  },
+  "popupTheme": {
+    "message": "主题"
+  },
+  "popupThemeDevice": {
+    "message": "跟随设备"
+  },
+  "popupThemeLight": {
+    "message": "浅色"
+  },
+  "popupThemeDark": {
+    "message": "深色"
+  },
+  "popupShorts": {
+    "message": "显示 Shorts"
+  },
+  "popupTimerTitle": {
+    "message": "计时器"
+  },
+  "timerStart": {
+    "message": "开始"
+  },
+  "timerPause": {
+    "message": "暂停"
+  },
+  "timerReset": {
+    "message": "重置"
+  },
+  "timerLength": {
+    "message": "时长（分钟）"
+  },
+  "timerLengthMinus": {
+    "message": "减少"
+  },
+  "timerLengthPlus": {
+    "message": "增加"
+  },
+  "timerDone": {
+    "message": "时间到了。"
+  },
+  "timerClose": {
+    "message": "关闭"
+  },
+  "popupSupport": {
+    "message": "支持这个项目"
+  }
+}

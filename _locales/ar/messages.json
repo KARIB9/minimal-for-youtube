@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "حوّل YouTube إلى أداة للإنتاجية: واجهة بسيطة بدلاً من الخوارزميات",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "الإضافة مُفعّلة"
+  },
+  "popupNote": {
+    "message": "عند التبديل يُعاد تحميل علامات تبويب YouTube المفتوحة."
+  },
+  "popupTheme": {
+    "message": "المظهر"
+  },
+  "popupThemeDevice": {
+    "message": "الجهاز"
+  },
+  "popupThemeLight": {
+    "message": "فاتح"
+  },
+  "popupThemeDark": {
+    "message": "داكن"
+  },
+  "popupShorts": {
+    "message": "عرض Shorts"
+  },
+  "popupTimerTitle": {
+    "message": "مؤقّت"
+  },
+  "timerStart": {
+    "message": "ابدأ"
+  },
+  "timerPause": {
+    "message": "إيقاف مؤقت"
+  },
+  "timerReset": {
+    "message": "إعادة ضبط"
+  },
+  "timerLength": {
+    "message": "المدة، دقيقة"
+  },
+  "timerLengthMinus": {
+    "message": "إنقاص"
+  },
+  "timerLengthPlus": {
+    "message": "زيادة"
+  },
+  "timerDone": {
+    "message": "انتهى الوقت."
+  },
+  "timerClose": {
+    "message": "إغلاق"
+  },
+  "popupSupport": {
+    "message": "ادعم المشروع"
+  }
+}

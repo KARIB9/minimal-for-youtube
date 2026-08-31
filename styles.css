@@ -1,0 +1,714 @@
+/* =========================================================================
+   ОБЩЕЕ ПРАВИЛО ПРИОРИТЕТА
+
+   CSS расширения браузер подключает РАНЬШЕ стилей страницы. Поэтому при равной
+   специфичности правило YouTube побеждает наше, и любое переопределение его
+   стилей требует !important. Правила с префиксом html.subscriptions-page этим
+   не страдают: лишний класс поднимает их специфичность выше.
+   ========================================================================= */
+
+/* =========================================================================
+   ШАПКА — на всех страницах
+   ========================================================================= */
+
+/* Скрываем, а не удаляем: #start и #end принадлежат шаблону ytd-masthead,
+   и удаление заставляло Polymer пересобирать шапку со вторым #center.
+   Селекторы привязаны к самой шапке — id "start" и "end" у YouTube
+   не уникальны. #start остаётся скрытым везде: логотип из него перенесён
+   в центр (early.js). */
+html:not(.yt-ext-off) #container.ytd-masthead > #start,
+html:not(.yt-ext-off) #container.ytd-masthead > #end,
+html:not(.yt-ext-off) tp-yt-app-drawer#guide,
+html:not(.yt-ext-off) ytd-mini-guide-renderer {
+    display: none !important;
+}
+
+/* #start остаётся скрытым везде: логотип из него перенесён в центр (early.js),
+   и показывать сам #start больше не требуется. Кнопка вызова меню — его
+   единственное оставшееся содержимое — пропадает вместе с ним, поэтому своего
+   правила ей снова не нужно. */
+
+/* Обнуляем обе переменные, которыми YouTube резервирует место под скрытые
+   меню слева, иначе там остаётся пустая полоса.
+
+   Второй адресат — ЗАКРЕПЛЁННАЯ шапка плейлиста: ".page-header-sidebar"
+   берёт из --app-drawer-width свой left, а margin-inline у #page-manager
+   до неё не достаёт. Замер на /playlist при окне 1440: список видео уезжал
+   под карточку на 188px.
+
+   !important обязателен: у YouTube есть правило с тем же селектором. */
+html:not(.yt-ext-off) ytd-app {
+    --ytd-mini-guide-width: 0px !important;
+    --app-drawer-width: 0px !important;
+}
+
+/* Шапка скрыта, пока YouTube её собирает: до сборки разметка другая, и что
+   именно мелькнёт — зависит от момента. masthead-finish — маркер завершения
+   от самого YouTube.
+
+   yt-masthead-ready ставит early.js по таймеру, на случай если маркер
+   не придёт: иначе шапка осталась бы скрытой навсегда. Через CSS-анимацию
+   такую страховку не сделать — visibility через keyframes не возвращается. */
+html:not(.yt-masthead-ready) ytd-masthead:not(.masthead-finish) {
+    visibility: hidden !important;
+}
+
+/* Отдельного правила для скелета шапки (#masthead-skeleton-icons) здесь нет:
+   он лежит внутри #end, а тот скрыт правилом выше; до сборки Polymer его
+   прячет правило про ytd-masthead:not(.masthead-finish). Обе стадии покрыты,
+   и лишняя привязка к внутреннему узлу YouTube не нужна. */
+
+/* Без #start и #end строка поиска уезжает влево (замер: середина на 386 при
+   центре экрана 640), поэтому центрируем шапку.
+
+   !important обязателен: у YouTube есть правило с тем же селектором
+   "#container.ytd-masthead { justify-content: space-between }". */
+html:not(.yt-ext-off) #container.ytd-masthead {
+    justify-content: center !important;
+}
+
+/* Плейсхолдер и иконки лупы и голосового ввода YouTube дорисовывает позже
+   самой строки поиска — на всех страницах одинаково. Ждём их и показываем
+   разом, вместе с логотипом и стрелкой там, где они есть.
+   visibility, а не display: место остаётся занятым и ничего не сдвигается. */
+html:not(.yt-ext-off) #center.ytd-masthead {
+    transition: opacity 0.15s ease;
+}
+
+html:not(.yt-center-ready) #center.ytd-masthead,
+html:not(.yt-center-ready) #scroll-arrow {
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* =========================================================================
+   НАШИ КНОПКИ В ШАПКЕ
+   ========================================================================= */
+
+#yt-you-link,
+#yt-home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--yt-sys-color-baseline--additive-background, rgba(255, 255, 255, 0.1));
+    color: var(--yt-sys-color-baseline--text-primary, #f1f1f1);
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+/* Фон наведения задаём сами: переменная YouTube --tf3fc855af2285f5f равна
+   rgba(255, 255, 255, 0.2) в ОБЕИХ темах (замер), и на светлой белая подсветка
+   по светлому фону не видна. Пока тема была только тёмная, это не мешало.
+
+   Тему различаем атрибутом dark на <html> — ставит его сам YouTube, но
+   признак верный: на светлой затемняем, на тёмной осветляем. */
+#yt-you-link:hover,
+#yt-home-link:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+html[dark] #yt-you-link:hover,
+html[dark] #yt-home-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* currentColor, а не жёсткий цвет: иконка следует за color ссылки, в том
+   числе при наведении, и не требует отдельного правила. */
+#yt-you-link svg,
+#yt-home-link svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+#yt-you-link {
+    margin-inline-start: 12px;
+}
+
+/* Кнопка возврата на подписки. Отступ 12px и размер 40px повторяют кнопку
+   голосового поиска справа: следы с обеих сторон выходят одинаковыми (52px),
+   и строка встаёт по центру. Левый отступ самой строки поиска при этом
+   снимаем — иначе он сдвинул бы её вправо на ту же величину. */
+#yt-home-link {
+    flex: 0 0 auto;
+    margin-inline-end: 12px;
+}
+
+html:not(.yt-ext-off):not(.subscriptions-page) #center.ytd-masthead {
+    justify-content: center !important;
+}
+
+html:not(.yt-ext-off):not(.subscriptions-page) #center.ytd-masthead > yt-searchbox {
+    margin-left: 0 !important;
+}
+
+/* Кнопка меню аккаунта — настоящий узел YouTube. early.js переносит его
+   в #container один раз за сеанс и больше не трогает: видимость по страницам
+   держит CSS, а не перенос туда-обратно при каждом переходе.
+
+   Показываем только на /feed/you: там уже есть #yt-you-link на эту же
+   страницу, и держать оба разом избыточно. */
+html:not(.yt-ext-off):not(.you-page) #container.ytd-masthead > ytd-topbar-menu-button-renderer {
+    display: none !important;
+}
+
+/* position: relative на самом #container обязателен: иначе абсолютный
+   потомок отсчитывает край от случайного предка выше по дереву.
+
+   Прижимаем к краю ШАПКИ, а не к краю #center: тот у́же экрана и стоит по
+   центру, так что его правый край — это край блока с поиском. На настоящем
+   YouTube кнопка аккаунта стоит именно у края шапки.
+
+   translateY(-50%) вместо ручных 12px сверху: не сломается, если YouTube
+   изменит высоту шапки. */
+html.you-page #container.ytd-masthead {
+    position: relative;
+}
+
+html.you-page #container.ytd-masthead > ytd-topbar-menu-button-renderer {
+    position: absolute;
+    top: 50%;
+    right: 24px;
+    transform: translateY(-50%);
+}
+
+/* Подложка при наведении — часть родного вида кнопки для ряда иконок в #end.
+   В новом месте, отдельно от них, она выглядит чужеродным пятном.
+
+   Целиться нужно в САМ хост, а не в потомков (#avatar-btn, #button, #img):
+   правило YouTube красит фон на хосте, две попытки бить по внутренностям
+   промахнулись мимо причины. Найдено через DevTools, Force state → :hover:
+
+     ytd-topbar-menu-button-renderer.ytd-masthead:hover {
+       background-color: var(--tf3fc855af2285f5f);
+     }
+
+   border-radius не трогаем: скруглять прозрачный фон незачем. */
+html.you-page #container.ytd-masthead > ytd-topbar-menu-button-renderer:hover {
+    background-color: transparent !important;
+}
+
+/* =========================================================================
+   ПОЛКИ ЛЕНТЫ (ytd-rich-shelf-renderer) — сбой конкретно в Arc
+
+   На /feed/you в Arc два блочных div внутри #dismissible — заголовок полки
+   и лента видео — встают в одну строку вместо друг под другом. В обычном
+   Chrome то же место рисуется верно, своих правил на этих узлах у нас нет;
+   разметка и скриншот присланы пользователем.
+
+   Причину узнать не удалось: сборки Arc у нас нет, а такие сбои движка
+   снаружи не видны. Поэтому не лечим причину, а задаём итог, который и так
+   должен быть, — оба блока block на всю ширину. В Chrome это ничего
+   не меняет.
+   ========================================================================= */
+html:not(.yt-ext-off) ytd-rich-shelf-renderer #dismissible {
+    display: block !important;
+}
+
+html:not(.yt-ext-off) ytd-rich-shelf-renderer #rich-shelf-header-container,
+html:not(.yt-ext-off) ytd-rich-shelf-renderer #contents-container {
+    display: block !important;
+    width: 100% !important;
+    float: none !important;
+}
+
+/* =========================================================================
+   SHORTS
+   ========================================================================= */
+
+/* Скрытие отключается классом yt-shorts-visible, его ставит early.js. Класс
+   именно ОТКЛЮЧАЕТ правила, а не включает: чтение настройки асинхронное,
+   а мы на document_start — иначе шортсы мелькали бы на каждой загрузке.
+   Переключение работает на живой странице, перезагрузка не нужна.
+
+   Шортсы приходят разными узлами: полкой в ленте, каруселью в поиске и на
+   канале, карточками в сетке — отсюда три группы правил. Где можно, опознаём
+   по ссылке /shorts/: она не зависит от языка интерфейса. Косая черта в конце
+   обязательна, иначе под правило попадёт ссылка на вкладку канала
+   (/@channel/shorts) вместе со всей карточкой канала в поиске.
+
+   Прячем ячейку, а не сам шортс: от скрытого внутреннего узла остаётся дыра
+   в сетке. На подписках работает ещё одно правило — см. ЭКРАН ПОДПИСОК. */
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytd-reel-shelf-renderer,
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytd-rich-shelf-renderer[is-shorts],
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytm-shorts-lockup-view-model,
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytm-shorts-lockup-view-model-v2 {
+    display: none !important;
+}
+
+/* :has() здесь не заменить ничем: контейнер узнаём по вложенной ссылке.
+   В Firefox он с 121-й версии, а в манифесте заявлена 109-я — там уйдут
+   полки (правило выше), а одиночные карточки останутся.
+
+   grid-shelf-view-model — полка Shorts в выдаче поиска. Тег нейтральный, им
+   же выводятся обычные видео, поэтому берём только со ссылкой внутри. Прячем
+   полку целиком: там ещё заголовок и кнопки "Ещё" / "Свернуть".
+
+   Секцию ytd-item-section-renderer НЕ трогаем: в поиске она держит всю
+   выдачу разом, и правило на неё убрало бы все результаты. */
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
+html:not(.yt-ext-off):not(.yt-shorts-visible) grid-shelf-view-model:has(a[href*="/shorts/"]),
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytd-rich-item-renderer:has(a[href*="/shorts/"]),
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytd-video-renderer:has(a[href*="/shorts/"]),
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytd-grid-video-renderer:has(a[href*="/shorts/"]),
+html:not(.yt-ext-off):not(.yt-shorts-visible) ytd-compact-video-renderer:has(a[href*="/shorts/"]) {
+    display: none !important;
+}
+
+/* Вкладка "Shorts" в шапке канала. Ссылки у вкладок нет — их переключает
+   скрипт, и единственная зацепка это атрибут tab-title (проверено на живой
+   странице). Название бренда YouTube не переводит, в русском интерфейсе
+   вкладка тоже "Shorts"; если где-то переведёт, вкладка останется, но сами
+   шортсы под ней скрыты правилами выше. */
+html:not(.yt-ext-off):not(.yt-shorts-visible) yt-tab-shape[tab-title="Shorts"] {
+    display: none !important;
+}
+
+/* =========================================================================
+   СТРАНИЦА ВИДЕО
+   ========================================================================= */
+
+/* Рекомендации лежат в двух местах сразу. #secondary — правая колонка; скрыв
+   только её, ничего не добьёшься: YouTube переносит их в #related под описание
+   (замер: 1416px высоты, страница 2518 против 1102 без них).
+
+   Класс ytd-watch-flexy в селекторах обязателен: id "secondary" и "related"
+   у YouTube не уникальны.
+
+   Колонку прячем только БЕЗ плейлиста: там же лежит очередь (#playlist), и
+   вместе с рекомендациями пропадал бы список видео. Признак берём у самого
+   YouTube — атрибут "playlist" на ytd-watch-flexy, он приходит с разметкой,
+   поэтому раскладка не мелькает. #related скрыт всегда: рядом с очередью
+   рекомендации тоже не нужны. */
+html:not(.yt-ext-off) ytd-watch-flexy:not([playlist]) #secondary.ytd-watch-flexy,
+html:not(.yt-ext-off) #related.ytd-watch-flexy {
+    display: none !important;
+}
+
+/* Рекламная врезка в правой колонке. Пока колонка пряталась целиком, её никто
+   не видел, — с возвратом очереди она всплыла над панелями (YouTube поднимает
+   её вручную через style="order: -1"). Прячем адресно по target-id: соседние
+   ytd-engagement-panel-section-list-renderer в том же #panels — это описание,
+   расшифровка и комментарии, они открываются по нажатию и нужны. */
+html:not(.yt-ext-off) #secondary.ytd-watch-flexy
+    ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-ads"] {
+    display: none !important;
+}
+
+/* Пределов ширины ДВА, оба равны --ytd-watch-flexy-max-player-width и считаются
+   от ВЫСОТЫ окна. Снять один бесполезно — держит второй. Замер при 1280x720:
+   без правок 1074, с одним снятым 1074, с обоими 1248. Отсюда и разница между
+   браузерами: в Firefox окно ниже, предел меньше, плеер уже.
+
+   Плата за это — низ плеера может уйти за край окна (при 1280x720 на 770).
+
+   С плейлистом пределы не трогаем: плеер во всю ширину налез бы на очередь. */
+html:not(.yt-ext-off) ytd-watch-flexy:not([playlist]) #primary.ytd-watch-flexy,
+html:not(.yt-ext-off) ytd-watch-flexy:not([playlist]) #player-container-outer.ytd-watch-flexy {
+    max-width: none !important;
+}
+
+/* Поля YouTube (16px по бокам) сняты ради полной ширины, горизонтальная
+   прокрутка погашена клипом. Перелив дают не поля: замер при 1340x900 показал
+   311px ещё ДО их снятия, основной источник — canvas фонового свечения плеера.
+
+   clip, а не hidden: hidden создаёт контейнер прокрутки и ломает sticky
+   у вложенных элементов.
+
+   Поля снимаем только без плейлиста — с очередью справа они держат разрыв
+   между колонками. Клип остаётся везде: всплывающие меню YouTube рисует
+   в ytd-popup-container, вне #primary, и обрезать им нечего. */
+html:not(.yt-ext-off) ytd-watch-flexy:not([playlist]) #primary.ytd-watch-flexy {
+    margin-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+html:not(.yt-ext-off) #primary.ytd-watch-flexy {
+    overflow-x: clip !important;
+}
+
+/* =========================================================================
+   ПАНЕЛЬ ПЛЕЕРА
+   ========================================================================= */
+
+/* Кнопку "Режим кинотеатра" намеренно НЕ трогаем: с возвратом очереди
+   плейлиста она стала единственным переключателем между полной шириной и
+   плеером рядом с очередью. Скрывать её на части страниц нельзя — своё
+   состояние YouTube помнит между видео, и режим остался бы включённым
+   без возможности выключить.
+
+   Без плейлиста она уменьшает картинку: предел ширины снят, и обычный режим
+   шире кинорежима (замер при 1440x900: 1440x810 против 1300x731). Это
+   следствие снятого предела, а не сбой. */
+
+/* Сетка рекомендаций в полноэкранном режиме. Скрываем корень: main-content,
+   stills-container и кнопка разворота лежат внутри него. !important
+   обязателен — display этого блока плеер переключает сам. */
+html:not(.yt-ext-off) .ytp-fullscreen-grid {
+    display: none !important;
+}
+
+/* "Картинка в картинке". Скрывает её инлайновый display:none от самого
+   YouTube, поэтому !important обязателен.
+
+   order переставляет кнопку между группами флекса .ytp-right-controls: по
+   разметке она лежит правее полноэкранного режима, а тот должен оставаться
+   последним. */
+html:not(.yt-ext-off) .ytp-pip-button {
+    display: block !important;
+}
+
+html:not(.yt-ext-off) .ytp-right-controls-right {
+    order: 1 !important;
+}
+
+/* =========================================================================
+   СОДЕРЖИМОЕ СТРАНИЦЫ
+   ========================================================================= */
+
+/* Показываем, когда страница собрана, чтобы не было видно, как она
+   достраивается. Класс ставит early.js — см. его же.
+   visibility, а не display: высота страницы не скачет в момент появления.
+
+   margin-inline с !important: у YouTube есть правило с этим же селектором. */
+html:not(.yt-ext-off) #page-manager.ytd-app {
+    margin-inline: 0 !important;
+    transition: opacity 0.15s ease;
+}
+
+html:not(.yt-content-ready) #page-manager.ytd-app {
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* =========================================================================
+   ПОЛОСА ПРОКРУТКИ
+   ========================================================================= */
+
+/* Скрыт только индикатор: колесо, клавиши, тачпад и стрелка ниже работают
+   как прежде. Правило на html, а не на body — полосу окна браузер рисует
+   по стилям корневого элемента.
+
+   Два свойства: scrollbar-width понимают Firefox и Chrome 121+,
+   ::-webkit-scrollbar — Chrome до 121-го. !important не нужен,
+   :not(.yt-ext-off) сам поднимает специфичность. */
+html:not(.yt-ext-off) {
+    scrollbar-width: none;
+}
+
+html:not(.yt-ext-off)::-webkit-scrollbar {
+    display: none;
+}
+
+/* =========================================================================
+   СТРЕЛКА ПРОКРУТКИ (видна только на подписках)
+   ========================================================================= */
+
+#scroll-arrow {
+    display: none;
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--yt-sys-color-baseline--text-primary, #f1f1f1);
+    opacity: 0.7;
+    cursor: pointer;
+    transform: translateX(-50%);
+    animation: scroll-arrow-bob 1.6s ease-in-out infinite;
+    transition: opacity 0.5s ease;
+}
+
+#scroll-arrow:hover {
+    opacity: 1;
+}
+
+#scroll-arrow.scroll-arrow--hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+html.subscriptions-page #scroll-arrow {
+    display: flex;
+}
+
+@keyframes scroll-arrow-bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+}
+
+/* =========================================================================
+   ЭКРАН ПОДПИСОК — шапка на весь экран вместо ленты рекомендаций
+   ========================================================================= */
+
+html.subscriptions-page #masthead-container.ytd-app {
+    position: unset !important;
+}
+
+/* Подложка шапки: лента во всю ширину у верхнего края, height 56px, фон
+   rgba(15, 15, 15, 0.8), z-index: -1 (замерено на живой странице). Нужна
+   фиксированной шапке, чтобы контент не просвечивал сквозь строку поиска.
+
+   На подписках шапка не фиксированная, а 100vh и в потоке — подкладывать не
+   подо что, но лента остаётся лежать поперёк верха. В обычном окне её не
+   видно (тот же цвет, что и фон), а при прозрачном окне браузера она
+   проступает полосой: сквозь страницу видны обои, а сквозь ленту нет. */
+html.subscriptions-page #background.ytd-masthead {
+    display: none;
+}
+
+html.subscriptions-page #container.ytd-masthead {
+    height: 100vh !important;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+/* Grid, а не колоночный flex: строка поиска и кнопка голосового поиска должны
+   стоять в одном ряду, а логотип — над ними. Три колонки: поиск тянется (1fr),
+   кнопка и ссылка "Вы" занимают свою ширину.
+
+   min-height резервирует место под второй ряд с первого кадра (логотип 58 +
+   gap 30 + ряд 40 = 128): блок центрируется по вертикали, и без резерва
+   логотип дёргался бы в момент появления строки. */
+html.subscriptions-page #center.ytd-masthead {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-content: start;
+    align-items: center;
+    row-gap: 30px;
+    column-gap: 8px;
+    min-height: 128px;
+}
+
+/* Логотип в первой колонке — той же, где строка поиска, а не во всю ширину
+   сетки. По всем трём колонкам он центрировался с учётом кнопок справа
+   и оказывался правее строки на 130px (замер). */
+html.subscriptions-page #center.ytd-masthead > ytd-topbar-logo-renderer {
+    grid-row: 1;
+    grid-column: 1;
+    justify-self: center;
+    width: 256px !important;
+    height: 55px !important;
+}
+
+html.subscriptions-page #center.ytd-masthead > yt-searchbox {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+/* Кнопка голосового поиска — во второй колонке, напротив строки.
+   display здесь не трогаем: YouTube сам скрывает её, когда голосовой поиск
+   недоступен, и навязывать показ пустой кнопки не следует. */
+html.subscriptions-page #center.ytd-masthead > #voice-search-button {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+/* Ссылка "Вы" — в одном ряду со строкой поиска, третья колонка. */
+html.subscriptions-page #center.ytd-masthead > #yt-you-link {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+/* Вторая, "узкая" кнопка поиска. YouTube показывает её вместо полной строки,
+   когда шапка узкая, и из-за наших правок геометрии он остаётся в этом режиме —
+   на экране оказываются оба поиска сразу. */
+html.subscriptions-page #center.ytd-masthead > #search-button-narrow,
+html.subscriptions-page #center.ytd-masthead > #ai-companion-button {
+    display: none !important;
+}
+
+html.subscriptions-page .ytSearchboxComponentHost,
+html.subscriptions-page .ytSearchboxComponentDesktop,
+html.subscriptions-page .ytSearchboxComponentHostDark {
+    width: 100%;
+    margin: 0;
+}
+
+html.subscriptions-page .ytSearchboxComponentInputBox {
+    margin: 0;
+}
+
+html.subscriptions-page .ytSearchboxComponentInputWrapper {
+    height: 40px;
+}
+
+/* Логотип увеличен масштабированием, а не размерами: ширина прописана явно
+   на трёх уровнях (хост 129px, ссылка 123px, иконка 93px), и правка любого
+   одного либо ломает раскладку, либо ни на что не влияет. transform обходит
+   это разом: 20px × 2.75 = 55px, пропорция держится сама. Хосту задан
+   итоговый размер, чтобы сетка отвела ровно столько места.
+
+   Цвет берём из переменной темы YouTube. Красного значка это не касается —
+   у него fill прописан в разметке, а надпись идёт от currentcolor. */
+html.subscriptions-page #center ytd-topbar-logo-renderer {
+    color: var(--yt-sys-color-baseline--text-primary, #f1f1f1);
+}
+
+/* Логотип виден только на подписках. Правило обязательно: перенесённый узел
+   остаётся в #center, а тот виден везде — иначе после перехода внутри SPA
+   логотип торчал бы в шапке видео. */
+html:not(.yt-ext-off):not(.subscriptions-page) #center ytd-topbar-logo-renderer {
+    display: none !important;
+}
+
+/* pointer-events страхует снятие href в early.js: узлом владеет Polymer,
+   и при пересборке шаблона атрибут может вернуться. */
+html.subscriptions-page #center ytd-topbar-logo-renderer > a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* padding у иконки снят: он масштабируется вместе с ней, и визуальный бокс
+   раздувался до 338x154 при логотипе 256x55, вылезая за хост со всех сторон.
+
+   translateX(4px) добивает центровку до нуля: асимметричный padding иконки
+   (16px против 14px) раньше компенсировал внутренний сдвиг строки поиска,
+   а после снятия компенсации не стало. Замер: без сдвига -4px, со сдвигом 0.
+
+   Порядок в transform важен — translateX ДО scale, иначе сдвиг считается
+   в масштабируемых пикселях и вместо 4px выходит 11. */
+html.subscriptions-page #center #logo-icon {
+    transform: translateX(4px) scale(2.75);
+    transform-origin: center;
+    padding: 0 !important;
+}
+
+/* Код страны, который YouTube показывает рядом с логотипом в части регионов.
+   В шапке он мелкий и незаметен, а в центре оказался бы крупной подписью
+   сбоку от логотипа. */
+html.subscriptions-page #center #country-code {
+    display: none !important;
+}
+
+/* Отступ задаём здесь, а не через #contents: у YouTube #contents есть внутри
+   каждой секции, полки и блока комментариев, и глобальное правило добавляло
+   50px каждому вложенному — в том числе тем, чью высоту YouTube считает сам. */
+html.subscriptions-page #page-manager.ytd-app {
+    margin: 0;
+    padding-block-start: 50px;
+}
+
+html.subscriptions-page .grid-subheader.ytd-shelf-renderer {
+    margin: 0;
+}
+
+/* Полки-врезки в ленте ("Самые актуальные", "Каналы, на которые вы подписаны"
+   и подобные). Прячем, а не удаляем из DOM: ленту собирает Polymer, и удаление
+   узлов уже приводило к пересборке с дублями.
+
+   Полку Shorts исключаем, когда её просят показывать: правило било по всем
+   врезкам разом, и тумблер в окне на этом экране ничего не менял.
+
+   Сделано вычитанием, а не возвратом display: показывать скрытое пришлось бы,
+   угадывая его значение (у YouTube там flex, не block). Опознаём по ссылке
+   /shorts/, а не по атрибуту is-shorts: в новой разметке полки его нет. */
+html.subscriptions-page:not(.yt-shorts-visible) ytd-rich-section-renderer,
+html.subscriptions-page.yt-shorts-visible ytd-rich-section-renderer:not(:has(a[href*="/shorts/"])) {
+    display: none !important;
+}
+
+/* =========================================================================
+   ОКНО ОБ ОКОНЧАНИИ ТАЙМЕРА
+
+   Единственный блок БЕЗ html:not(.yt-ext-off): таймер работает независимо
+   от того, перекроен ли YouTube, а селекторы бьют только по нашему узлу,
+   которого при выключенном таймере просто нет.
+
+   Цвета свои: окно стоит над затемнением, подстраиваться под тему страницы
+   ему незачем. Красный совпадает с --accent в окне расширения.
+   ========================================================================= */
+
+/* 70% окна по обеим сторонам, по центру ставит сам браузер — у <dialog>
+   в стилях браузера прописан margin: auto.
+
+   box-sizing обязателен: без него отступы прибавились бы К 70%. Глобального
+   правила в этом файле нет, оно только в стилях окна расширения.
+
+   Содержимое центрируем флексом, иначе на 70% экрана текст с кнопкой
+   прижались бы к верху. Размер шрифта плавающий: 15px, рассчитанные на
+   карточку в 320px, на широком окне потерялись бы. */
+#yt-timer-dialog {
+    box-sizing: border-box;
+    width: 70vw;
+    height: 70vh;
+    max-width: none;
+    padding: 24px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 4vh, 48px);
+    border: none;
+    border-radius: 12px;
+    background: #212121;
+    color: #f1f1f1;
+    font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: clamp(18px, 2.4vw, 40px);
+    line-height: 1.3;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* display ТОЛЬКО для открытого состояния, и это не мелочь. Закрытое <dialog>
+   держит скрытым правило браузера "dialog:not([open])", а правила страницы
+   бьют браузерные при любой специфичности. Безусловный display: flex его
+   перебивал, и окно висело на странице всегда — уже без затемнения и без
+   возможности закрыть. Атрибут open браузер ставит сам при showModal(). */
+#yt-timer-dialog[open] {
+    display: flex;
+}
+
+/* ::backdrop рисует сам браузер под окном top layer. Своей подложкой это
+   не повторить: обычный div в полноэкранном режиме не виден. */
+#yt-timer-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+/* Отступ снят: расстояние до кнопки задаёт gap у окна. */
+#yt-timer-text {
+    margin: 0;
+}
+
+/* Кнопка НЕ тянется вместе с окном: font: inherit взял бы плавающий размер
+   текста, и на широком экране кнопка выросла бы до нелепого. Свой размер
+   фиксированный, растёт только окно вокруг неё.
+   flex: 0 0 auto — иначе в колонке-флексе кнопка сжималась бы по высоте. */
+#yt-timer-close {
+    flex: 0 0 auto;
+    min-width: 160px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 22px;
+    background: #ff0033;
+    color: #ffffff;
+    font: inherit;
+    font-size: 16px;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+#yt-timer-close:hover {
+    background: #d4002a;
+}
+
+#yt-timer-close:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}

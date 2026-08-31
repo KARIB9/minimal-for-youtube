@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "Превратите YouTube в инструмент для продуктивности: минималистичный интерфейс вместо алгоритмов",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "Расширение включено"
+  },
+  "popupNote": {
+    "message": "При переключении открытые вкладки YouTube перезагрузятся."
+  },
+  "popupTheme": {
+    "message": "Тема"
+  },
+  "popupThemeDevice": {
+    "message": "Как на устройстве"
+  },
+  "popupThemeLight": {
+    "message": "Светлая"
+  },
+  "popupThemeDark": {
+    "message": "Тёмная"
+  },
+  "popupShorts": {
+    "message": "Показывать Shorts"
+  },
+  "popupTimerTitle": {
+    "message": "Таймер"
+  },
+  "timerStart": {
+    "message": "Старт"
+  },
+  "timerPause": {
+    "message": "Пауза"
+  },
+  "timerReset": {
+    "message": "Сброс"
+  },
+  "timerLength": {
+    "message": "Длительность, мин"
+  },
+  "timerLengthMinus": {
+    "message": "Уменьшить"
+  },
+  "timerLengthPlus": {
+    "message": "Увеличить"
+  },
+  "timerDone": {
+    "message": "Время вышло."
+  },
+  "timerClose": {
+    "message": "Закрыть"
+  },
+  "popupSupport": {
+    "message": "Поддержать проект"
+  }
+}

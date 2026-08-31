@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "YouTube를 생산성 도구로 바꾸세요: 알고리즘 대신 미니멀한 화면",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "확장 프로그램 사용"
+  },
+  "popupNote": {
+    "message": "전환하면 열려 있는 YouTube 탭이 새로고침됩니다."
+  },
+  "popupTheme": {
+    "message": "테마"
+  },
+  "popupThemeDevice": {
+    "message": "기기"
+  },
+  "popupThemeLight": {
+    "message": "밝게"
+  },
+  "popupThemeDark": {
+    "message": "어둡게"
+  },
+  "popupShorts": {
+    "message": "Shorts 표시"
+  },
+  "popupTimerTitle": {
+    "message": "타이머"
+  },
+  "timerStart": {
+    "message": "시작"
+  },
+  "timerPause": {
+    "message": "일시정지"
+  },
+  "timerReset": {
+    "message": "초기화"
+  },
+  "timerLength": {
+    "message": "길이(분)"
+  },
+  "timerLengthMinus": {
+    "message": "줄이기"
+  },
+  "timerLengthPlus": {
+    "message": "늘리기"
+  },
+  "timerDone": {
+    "message": "시간이 다 되었습니다."
+  },
+  "timerClose": {
+    "message": "닫기"
+  },
+  "popupSupport": {
+    "message": "프로젝트 후원하기"
+  }
+}

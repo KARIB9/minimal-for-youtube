@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "Trasforma YouTube in uno strumento di produttività: un'interfaccia minimalista al posto degli algoritmi",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "Estensione attiva"
+  },
+  "popupNote": {
+    "message": "Cambiando, le schede YouTube aperte vengono ricaricate."
+  },
+  "popupTheme": {
+    "message": "Tema"
+  },
+  "popupThemeDevice": {
+    "message": "Dispositivo"
+  },
+  "popupThemeLight": {
+    "message": "Chiaro"
+  },
+  "popupThemeDark": {
+    "message": "Scuro"
+  },
+  "popupShorts": {
+    "message": "Mostra Shorts"
+  },
+  "popupTimerTitle": {
+    "message": "Timer"
+  },
+  "timerStart": {
+    "message": "Avvia"
+  },
+  "timerPause": {
+    "message": "Pausa"
+  },
+  "timerReset": {
+    "message": "Reimposta"
+  },
+  "timerLength": {
+    "message": "Durata, min"
+  },
+  "timerLengthMinus": {
+    "message": "Diminuisci"
+  },
+  "timerLengthPlus": {
+    "message": "Aumenta"
+  },
+  "timerDone": {
+    "message": "Tempo scaduto."
+  },
+  "timerClose": {
+    "message": "Chiudi"
+  },
+  "popupSupport": {
+    "message": "Sostieni il progetto"
+  }
+}

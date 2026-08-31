@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "Ubah YouTube menjadi alat produktivitas: antarmuka minimalis, bukan algoritma",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "Ekstensi aktif"
+  },
+  "popupNote": {
+    "message": "Mengubahnya akan memuat ulang tab YouTube yang terbuka."
+  },
+  "popupTheme": {
+    "message": "Tema"
+  },
+  "popupThemeDevice": {
+    "message": "Perangkat"
+  },
+  "popupThemeLight": {
+    "message": "Terang"
+  },
+  "popupThemeDark": {
+    "message": "Gelap"
+  },
+  "popupShorts": {
+    "message": "Tampilkan Shorts"
+  },
+  "popupTimerTitle": {
+    "message": "Pengatur waktu"
+  },
+  "timerStart": {
+    "message": "Mulai"
+  },
+  "timerPause": {
+    "message": "Jeda"
+  },
+  "timerReset": {
+    "message": "Atur ulang"
+  },
+  "timerLength": {
+    "message": "Durasi, mnt"
+  },
+  "timerLengthMinus": {
+    "message": "Kurangi"
+  },
+  "timerLengthPlus": {
+    "message": "Tambah"
+  },
+  "timerDone": {
+    "message": "Waktu habis."
+  },
+  "timerClose": {
+    "message": "Tutup"
+  },
+  "popupSupport": {
+    "message": "Dukung proyek ini"
+  }
+}

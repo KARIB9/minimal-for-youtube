@@ -1,0 +1,70 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "Turn YouTube into a productivity tool: a minimal interface instead of algorithms",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "Extension enabled"
+  },
+  "popupNote": {
+    "message": "Toggling reloads open YouTube tabs."
+  },
+  "popupTheme": {
+    "message": "Theme"
+  },
+  "popupThemeDevice": {
+    "message": "Device"
+  },
+  "popupThemeLight": {
+    "message": "Light"
+  },
+  "popupThemeDark": {
+    "message": "Dark"
+  },
+  "popupShorts": {
+    "message": "Show Shorts"
+  },
+  "popupTimerTitle": {
+    "message": "Timer",
+    "description": "Heading of the timer section in the popup"
+  },
+  "timerStart": {
+    "message": "Start",
+    "description": "Button that starts the countdown"
+  },
+  "timerPause": {
+    "message": "Pause",
+    "description": "Button that pauses the countdown"
+  },
+  "timerReset": {
+    "message": "Reset",
+    "description": "Button that stops the countdown and returns it to the full length"
+  },
+  "timerLength": {
+    "message": "Length, min",
+    "description": "Label of the timer length field, in minutes"
+  },
+  "timerLengthMinus": {
+    "message": "Decrease",
+    "description": "Aria-label of the button that decreases the timer length by 1 minute"
+  },
+  "timerLengthPlus": {
+    "message": "Increase",
+    "description": "Aria-label of the button that increases the timer length by 1 minute"
+  },
+  "timerDone": {
+    "message": "Time is up.",
+    "description": "Notification shown when the countdown reaches zero"
+  },
+  "timerClose": {
+    "message": "Close",
+    "description": "Button that dismisses the timer window on the YouTube page"
+  },
+  "popupSupport": {
+    "message": "Support the project"
+  }
+}

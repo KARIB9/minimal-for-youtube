@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "YouTube'u bir üretkenlik aracına dönüştür: algoritmalar yerine minimalist bir arayüz",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "Uzantı etkin"
+  },
+  "popupNote": {
+    "message": "Değiştirince açık YouTube sekmeleri yeniden yüklenir."
+  },
+  "popupTheme": {
+    "message": "Tema"
+  },
+  "popupThemeDevice": {
+    "message": "Cihaz"
+  },
+  "popupThemeLight": {
+    "message": "Açık"
+  },
+  "popupThemeDark": {
+    "message": "Koyu"
+  },
+  "popupShorts": {
+    "message": "Shorts'u göster"
+  },
+  "popupTimerTitle": {
+    "message": "Zamanlayıcı"
+  },
+  "timerStart": {
+    "message": "Başlat"
+  },
+  "timerPause": {
+    "message": "Duraklat"
+  },
+  "timerReset": {
+    "message": "Sıfırla"
+  },
+  "timerLength": {
+    "message": "Süre, dk"
+  },
+  "timerLengthMinus": {
+    "message": "Azalt"
+  },
+  "timerLengthPlus": {
+    "message": "Artır"
+  },
+  "timerDone": {
+    "message": "Süre doldu."
+  },
+  "timerClose": {
+    "message": "Kapat"
+  },
+  "popupSupport": {
+    "message": "Projeye destek ol"
+  }
+}

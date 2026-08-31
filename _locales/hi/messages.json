@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "YouTube को उत्पादकता का साधन बनाएँ: एल्गोरिद्म की जगह सरल इंटरफ़ेस",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "एक्सटेंशन चालू"
+  },
+  "popupNote": {
+    "message": "बदलने पर खुले YouTube टैब पुनः लोड होंगे।"
+  },
+  "popupTheme": {
+    "message": "थीम"
+  },
+  "popupThemeDevice": {
+    "message": "डिवाइस"
+  },
+  "popupThemeLight": {
+    "message": "लाइट"
+  },
+  "popupThemeDark": {
+    "message": "डार्क"
+  },
+  "popupShorts": {
+    "message": "Shorts दिखाएं"
+  },
+  "popupTimerTitle": {
+    "message": "टाइमर"
+  },
+  "timerStart": {
+    "message": "शुरू करें"
+  },
+  "timerPause": {
+    "message": "रोकें"
+  },
+  "timerReset": {
+    "message": "रीसेट"
+  },
+  "timerLength": {
+    "message": "अवधि, मिनट"
+  },
+  "timerLengthMinus": {
+    "message": "घटाएँ"
+  },
+  "timerLengthPlus": {
+    "message": "बढ़ाएँ"
+  },
+  "timerDone": {
+    "message": "समय समाप्त।"
+  },
+  "timerClose": {
+    "message": "बंद करें"
+  },
+  "popupSupport": {
+    "message": "प्रोजेक्ट का समर्थन करें"
+  }
+}

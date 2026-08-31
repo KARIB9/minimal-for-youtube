@@ -1,0 +1,432 @@
+/* Окно следует переключателю темы, а не системной: иначе выходил рассинхрон —
+   выбрана тёмная, YouTube тёмный, а окно рядом светлое. Переменных темы
+   YouTube здесь нет и быть не может: окно рисует браузер, а не страница.
+
+   Три уровня намеренно: базовые значения светлые; системная тёмная действует,
+   пока popup.js не проставил data-theme (первые кадры до ответа хранилища —
+   без этого окно моргало бы белым); выбор человека перебивает оба и идёт
+   последним, поэтому при равной специфичности выигрывает.
+
+   :not([data-theme="light"]) во втором уровне обязателен: иначе светлая тема,
+   выбранная вручную при тёмной системе, спорила бы с медиазапросом. */
+:root {
+    --bg: #ffffff;
+    --fg: #0f0f0f;
+    --muted: #606060;
+    --line: rgba(0, 0, 0, 0.15);
+    --accent: #ff0033;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f0f0f;
+        --fg: #f1f1f1;
+        --muted: #aaaaaa;
+        --line: rgba(255, 255, 255, 0.2);
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f0f0f;
+    --fg: #f1f1f1;
+    --muted: #aaaaaa;
+    --line: rgba(255, 255, 255, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 250px;
+    margin: 0;
+    padding: 16px;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+h1 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Переключатель собран из чекбокса, а не из div с обработчиком: так он
+   доступен с клавиатуры и объявляется скринридером без ролей вручную. */
+.switch {
+    appearance: none;
+    position: relative;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 20px;
+    margin: 0;
+    border-radius: 10px;
+    background: var(--line);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.switch::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    inset-inline-start: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+    transition: transform 0.15s ease;
+}
+
+.switch:checked {
+    background: var(--accent);
+}
+
+/* В арабской локали окно переворачивается (dir=rtl), и кружок должен ехать
+   в другую сторону — отсюда переменная вместо жёсткого знака. */
+.switch:checked::after {
+    transform: translateX(calc(16px * var(--dir, 1)));
+}
+
+[dir="rtl"] {
+    --dir: -1;
+}
+
+.switch:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* =========================================================================
+   ВЫБОР ТЕМЫ
+   ========================================================================= */
+
+/* Строка с кнопками — не label, кликать её целиком не во что. Курсор-палец
+   от .row обещал бы обратное. */
+.row-static {
+    cursor: default;
+}
+
+/* Отбивка перед самостоятельным блоком настроек. Тема и Shorts — не
+   продолжение строки выше, и без воздуха читались бы одним списком.
+   У таймера ту же роль играет линия сверху; здесь хватает отступа. */
+.block-start {
+    margin-top: 12px;
+}
+
+/* Сегментированный ряд: те же приёмы, что у степпера ниже — кнопки встык,
+   общий радиус по краям, у всех кроме первой снят левый бордюр, иначе на
+   стыках вставали бы две линии. Ряд во всю ширину окна: "Как на устройстве"
+   рядом с двумя другими в 250px не влезало. */
+.segmented {
+    display: flex;
+    align-items: stretch;
+    margin-top: 2px;
+}
+
+/* Сами радиокнопки не показываем, но и не выключаем из потока фокуса:
+   display: none или visibility: hidden отняли бы у них фокус, и выбор
+   перестал бы переключаться стрелками. Отсюда прозрачность и абсолютное
+   положение вместо скрытия. */
+.seg-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Равные доли (flex: 1 1 0), а не по содержимому: доли делают ряд ровным при
+   любой длине подписей, в том числе в переводах. Перенос строк разрешён —
+   длинная подпись занимает две строки внутри своей доли, а не растягивает её.
+   min-height держит все три одной высоты, когда переносится только одна. */
+.seg {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 4px 6px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--fg);
+    font-size: 11px;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.seg:not(:first-of-type) {
+    border-inline-start: none;
+}
+
+/* Логические радиусы, а не border-radius по углам: в rtl первая кнопка
+   оказывается справа, и физические значения скруглили бы не ту сторону. */
+.seg:first-of-type {
+    border-start-start-radius: 6px;
+    border-end-start-radius: 6px;
+}
+
+.seg:last-of-type {
+    border-start-end-radius: 6px;
+    border-end-end-radius: 6px;
+}
+
+.seg-input:not(:checked) + .seg:hover {
+    background: var(--line);
+}
+
+/* Красным, как включённый тумблер выше: в этом окне акцент уже означает
+   "выбрано", и заводить второй язык для того же смысла незачем. */
+.seg-input:checked + .seg {
+    /* Бордюр красим в акцент, а не делаем прозрачным: у левой кнопки правая
+       грань приходится на стык, и прозрачная давала бы там щель в 1px
+       цвета фона — у соседней кнопки левого бордюра нет. */
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #ffffff;
+}
+
+/* Обводка на самой кнопке, а не на скрытом поле: у поля размер 1px, и кольцо
+   фокуса оказалось бы точкой в углу. */
+.seg-input:focus-visible + .seg {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.note {
+    margin: 0;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* =========================================================================
+   ТАЙМЕР
+   ========================================================================= */
+
+.timer {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+}
+
+.timer-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* tabular-nums обязателен: в пропорциональном шрифте цифры разной ширины,
+   и на каждой секунде строка дёргалась бы по горизонтали. */
+.timer-clock {
+    margin: 8px 0 0;
+    font-size: 34px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.timer-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.btn {
+    flex: 1 1 0;
+    padding: 7px 0;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn:hover {
+    background: var(--line);
+}
+
+.btn-accent {
+    border-color: transparent;
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.btn-accent:hover {
+    /* Тот же цвет, но темнее: у --accent нет парного оттенка для наведения,
+       а color-mix даёт его без второй переменной. */
+    background: color-mix(in srgb, var(--accent) 85%, #000000);
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Поле одно, поэтому подпись помещается рядом: на строку остаётся вся ширина
+   окна, и самый длинный перевод ("Длительность, мин") встаёт вместе с полем
+   без переноса — проверено. */
+.timer-length {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Степпер — один сегментированный блок: кнопки встык с полем, тот же
+   радиус 6px, что был у одиночного поля раньше. У среднего сегмента (поля)
+   рамка со всех сторон, у соседних кнопок — без стороны, обращённой к полю:
+   иначе на стыке было бы две линии вплотную, а не одна. */
+.stepper {
+    display: flex;
+    align-items: stretch;
+    flex: 0 0 auto;
+}
+
+.step-btn {
+    flex: 0 0 auto;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--fg);
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.step-btn:first-child {
+    border-start-start-radius: 6px;
+    border-end-start-radius: 6px;
+    border-inline-end: none;
+}
+
+.step-btn:last-child {
+    border-start-end-radius: 6px;
+    border-end-end-radius: 6px;
+    border-inline-start: none;
+}
+
+.step-btn:hover:not(:disabled) {
+    background: var(--line);
+}
+
+.step-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+/* Кнопка гаснет у края диапазона (1 и 180), а не остаётся нажимаемой
+   вхолостую: без этого клик на границе ничего не менял бы, не объясняя
+   почему. */
+.step-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.step-icon {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.timer-length input {
+    flex: 0 0 auto;
+    width: 38px;
+    padding: 4px 0;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    -moz-appearance: textfield;
+}
+
+/* Нативные стрелочки браузера дублировали бы наши кнопки — убираем. */
+.timer-length input::-webkit-inner-spin-button,
+.timer-length input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.timer-length input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+/* =========================================================================
+   ССЫЛКА ПОДДЕРЖКИ
+   ========================================================================= */
+
+/* Тем же приглушённым цветом и размером, что и примечание: строка нужная,
+   но не та, ради которой открывают окно. Разделительной линии нет — она уже
+   есть у таймера выше, вторая сделала бы низ окна тяжелее верха. */
+.support {
+    margin: 30px 0 0;
+    color: var(--muted);
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Подпись отдельной строкой, ссылки под ней: в одну строку "Поддержать
+   проект Boosty Ko-fi" читается как перечисление без начала и конца. */
+.support-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+/* Ссылки крупнее подписи: подпись объясняет, а нажимают именно их. */
+.support-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 15px;
+    text-decoration: none;
+}
+
+/* 17px при тексте ссылки в 15px: значок читается как марка сервиса, но не
+   спорит с названием. fill: currentColor — цвет берётся у ссылки, вместе
+   с ним работает и подсветка при наведении. */
+.support-icon {
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+}
+
+.support-links a:hover {
+    color: var(--fg);
+    text-decoration: underline;
+}
+
+.support-links a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}

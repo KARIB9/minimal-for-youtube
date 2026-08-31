@@ -1,0 +1,61 @@
+{
+  "extName": {
+    "message": "Minimal for YouTube",
+    "description": "Extension name shown in the browser and the store"
+  },
+  "extDescription": {
+    "message": "YouTube を生産性のためのツールに変える：アルゴリズムではなくミニマルな画面",
+    "description": "Short description. Chrome limit is 132 characters"
+  },
+  "popupEnabled": {
+    "message": "拡張機能を有効にする"
+  },
+  "popupNote": {
+    "message": "切り替えると、開いている YouTube のタブが再読み込みされます。"
+  },
+  "popupTheme": {
+    "message": "テーマ"
+  },
+  "popupThemeDevice": {
+    "message": "デバイス"
+  },
+  "popupThemeLight": {
+    "message": "ライト"
+  },
+  "popupThemeDark": {
+    "message": "ダーク"
+  },
+  "popupShorts": {
+    "message": "ショート動画を表示"
+  },
+  "popupTimerTitle": {
+    "message": "タイマー"
+  },
+  "timerStart": {
+    "message": "開始"
+  },
+  "timerPause": {
+    "message": "一時停止"
+  },
+  "timerReset": {
+    "message": "リセット"
+  },
+  "timerLength": {
+    "message": "長さ（分）"
+  },
+  "timerLengthMinus": {
+    "message": "減らす"
+  },
+  "timerLengthPlus": {
+    "message": "増やす"
+  },
+  "timerDone": {
+    "message": "時間になりました。"
+  },
+  "timerClose": {
+    "message": "閉じる"
+  },
+  "popupSupport": {
+    "message": "プロジェクトを支援"
+  }
+}
