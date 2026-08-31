@@ -8,6 +8,12 @@ timer.
 
 [Русская версия](README.ru.md)
 
+## Demo
+
+![Subscriptions screen: a full-height header, the feed starts below the fold](docs/demo.gif)
+
+The full recording in better quality: [docs/demo.mp4](docs/demo.mp4)
+
 ## What it does
 
 - **No recommendation feed.** The home page redirects to Subscriptions, where
