@@ -90,6 +90,10 @@ is collected or sent anywhere.
 If the extension is useful to you: [Boosty](https://boosty.to/batton_rooge/donate)
 · [Ko-fi](https://ko-fi.com/batton_rouge)
 
+## Privacy
+
+Nothing is collected, stored or transmitted — see [PRIVACY.md](PRIVACY.md).
+
 ## License
 
 [MIT](LICENSE)

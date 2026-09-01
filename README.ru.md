@@ -87,6 +87,10 @@ Chrome и браузеры на Chromium, Firefox 109+ (для полного с
 Если расширение оказалось полезным: [Boosty](https://boosty.to/batton_rooge/donate)
 · [Ko-fi](https://ko-fi.com/batton_rouge)
 
+## Приватность
+
+Ничего не собирается и никуда не передаётся — см. [PRIVACY.md](PRIVACY.md).
+
 ## Лицензия
 
 [MIT](LICENSE)
