@@ -1,6 +1,16 @@
 // Весь файл обёрнут в функцию: early.js выполняется в том же изолированном
 // мире, и совпадение имени на верхнем уровне уронило бы оба скрипта.
 (() => {
+  // Разбираем разметку значка парсером, а не через innerHTML: линтер AMO
+  // помечает любое присваивание innerHTML, даже когда значение своё
+  // и постоянное. Парсер вдобавок не выполняет скрипты при разборе,
+  // так что претензия снимается по существу, а не обходится.
+  function svgNode(markup) {
+    const doc = new DOMParser().parseFromString(markup, "image/svg+xml");
+
+    return document.importNode(doc.documentElement, true);
+  }
+
   const LABELS = {
     en: { scrollDown: "Scroll down" },
     ru: { scrollDown: "Прокрутить вниз" },
@@ -118,8 +128,11 @@
     arrow.id = "scroll-arrow";
     arrow.type = "button";
     arrow.setAttribute("aria-label", T.scrollDown);
-    arrow.innerHTML =
-      '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>';
+    arrow.appendChild(
+      svgNode(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>',
+      ),
+    );
 
     arrow.addEventListener("click", () => {
       window.scrollBy({ top: window.innerHeight, behavior: "smooth" });

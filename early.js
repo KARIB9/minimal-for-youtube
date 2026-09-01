@@ -47,12 +47,22 @@
 
   // Иконка помечена aria-hidden, поэтому без подписи у ссылки не осталось бы
   // доступного имени. Заодно даёт всплывающую подсказку.
+  // Разбираем разметку значка парсером, а не через innerHTML: линтер AMO
+  // помечает любое присваивание innerHTML предупреждением, независимо от того,
+  // что значения у нас свои и постоянные. Парсер к тому же не может выполнить
+  // скрипт при разборе, поэтому претензия снимается по существу, а не обходится.
+  function svgNode(markup) {
+    const doc = new DOMParser().parseFromString(markup, "image/svg+xml");
+
+    return document.importNode(doc.documentElement, true);
+  }
+
   function makeIconLink(id, href, svg, label) {
     const link = document.createElement("a");
 
     link.id = id;
     link.href = href;
-    link.innerHTML = svg;
+    link.appendChild(svgNode(svg));
     link.setAttribute("aria-label", label);
     link.title = label;
 
